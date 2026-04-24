@@ -8,4 +8,4 @@ cmds = ["cd laravel && composer install --no-interaction --no-dev --prefer-dist 
 cmds = ["cd laravel && npm ci --include=dev && npm run build"]
 
 [start]
-cmd = "cd laravel && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"
+cmd = "cd laravel && php artisan serve --host=0.0.0.0 --port=$PORT"
