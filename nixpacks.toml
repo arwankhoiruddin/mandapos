@@ -1,0 +1,13 @@
+[build]
+nixpkgs.pkgs = ["php82", "nodejs_20", "postgresql"]
+
+[build.phases.setup]
+dependsOn = ["base"]
+commands = [
+  "cd laravel && composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader",
+  "npm ci --include=dev",
+  "npm run build"
+]
+
+[start]
+cmd = "cd laravel && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"
