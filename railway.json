@@ -1,12 +1,12 @@
 {
   "builder": "railpacks",
   "build": {
-    "installCommand": "composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader",
-    "buildCommand": "npm ci --include=dev && npm run build"
+    "installCommand": "cd laravel && composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader && npm ci --include=dev",
+    "buildCommand": "cd laravel && npm run build"
   },
   "deploy": {
-    "preDeployCommand": "php artisan migrate --force",
-    "startCommand": "php artisan serve --host=0.0.0.0 --port=$PORT",
+    "preDeployCommand": "cd laravel && php artisan migrate --force",
+    "startCommand": "cd laravel && php artisan serve --host=0.0.0.0 --port=$PORT",
     "healthcheckPath": "/",
     "restartPolicy": {
       "type": "on-failure",
