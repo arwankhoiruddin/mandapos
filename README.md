@@ -201,9 +201,11 @@ Penyimpanan akun auth Express:
 
 ---
 
-## 🧩 Laravel Auth (Migrasi Penuh)
+## 🧩 Catatan Struktur Aplikasi
 
-Folder Laravel hasil migrasi ada di `laravel/` dengan Breeze auth + skema multi-restoran.
+Aplikasi yang dideploy ke Railway berjalan dari root repository ini.
+
+Folder `laravel/` hanya menyimpan hasil migrasi/eksperimen lama dan bukan target deploy utama.
 
 ### Fitur yang sudah disiapkan di Laravel
 
@@ -212,30 +214,23 @@ Folder Laravel hasil migrasi ada di `laravel/` dengan Breeze auth + skema multi-
 - Relasi many-to-many user-restoran dengan role di pivot (`restoran_user`).
 - Dashboard menampilkan restoran yang dikelola user.
 
-### Jalankan Laravel Auth
+### Jalankan Aplikasi dari Root
 
 ```bash
-cd laravel
 cp .env.example .env
-composer install
 npm install
-php artisan key:generate
-php artisan migrate
-npm run build
-php artisan serve
+npm start
 ```
 
-### Konfigurasi PostgreSQL untuk Laravel
+### Konfigurasi PostgreSQL untuk Aplikasi Root
 
-Ubah `.env` di folder `laravel/`:
+Ubah `.env` di root project:
 
 ```env
-DB_CONNECTION=pgsql
-DB_HOST=127.0.0.1
-DB_PORT=5432
-DB_DATABASE=mandapos
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
+PORT=3000
+NODE_ENV=development
+SESSION_SECRET=ganti-dengan-secret-aman
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/mandapos
 ```
 
 ---
@@ -246,12 +241,11 @@ DB_PASSWORD=postgres
 2. Hubungkan repository GitHub ini ke proyek Railway.
 3. Tambahkan layanan **PostgreSQL** dari Railway marketplace.
 4. Set environment variable berikut di Railway:
-	 - `APP_KEY` — hasil `php artisan key:generate --show`
-	 - `DB_CONNECTION=pgsql`
 	 - `DATABASE_URL` — otomatis diisi Railway dari layanan PostgreSQL
-	 - `APP_ENV=production`
-	 - `APP_URL` — URL domain yang diberikan Railway
-5. Railway akan otomatis menjalankan build dan deploy.
+	 - `SESSION_SECRET` — string acak yang aman untuk session Express
+	 - `NODE_ENV=production`
+	 - `PORT` — akan diisi Railway otomatis saat deploy
+5. Railway akan membaca `railway.toml` di root dan menjalankan app dari root repository dengan builder `RAILPACKS`.
 
 ---
 
