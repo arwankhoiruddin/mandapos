@@ -86,6 +86,10 @@ function escapeHtml(value) {
 
 app.use(express.static(publicDir, { index: false }));
 
+app.get('/health', (_req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 app.get('/', (_req, res) => {
   const laravelAppUrl = process.env.LARAVEL_APP_URL || 'http://localhost:8000';
   return res.redirect(laravelAppUrl);
