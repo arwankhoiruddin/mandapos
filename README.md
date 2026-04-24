@@ -23,7 +23,8 @@ UMKM di Indonesia. Oleh karena itu, UI/UX harus sangat mudah dan mempunyai learn
 * Categories
 * Discounts
 * Inventory Management
-* Employees
+* Employees: employee list, access rights, timecards, total hours
+* Access: backoffice dan POS (owner, administrator dan manager), POS (kasir)
 * Customers
 * Setting layout dan informasi nota pembelian
 * Multi-store
