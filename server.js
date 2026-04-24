@@ -84,7 +84,12 @@ function escapeHtml(value) {
     .replace(/'/g, '&#039;');
 }
 
-app.use(express.static(publicDir));
+app.use(express.static(publicDir, { index: false }));
+
+app.get('/', (_req, res) => {
+  const laravelAppUrl = process.env.LARAVEL_APP_URL || 'http://localhost:8000';
+  return res.redirect(laravelAppUrl);
+});
 
 app.get('/login', (req, res) => {
   if (req.session.userId) {
@@ -268,7 +273,8 @@ app.post('/logout', (req, res) => {
 });
 
 app.get('*', (_req, res) => {
-  res.sendFile(path.join(publicDir, 'index.html'));
+  const laravelAppUrl = process.env.LARAVEL_APP_URL || 'http://localhost:8000';
+  return res.redirect(laravelAppUrl);
 });
 
 initDb()
