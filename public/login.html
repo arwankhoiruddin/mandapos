@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - MandaPOS</title>
+    <meta name="description" content="Login ke akun MandaPOS untuk kelola restoran dan operasional harian." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Literata:opsz,wght@7..72,500;7..72,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="auth-page">
+    <main class="auth-shell">
+      <a href="/" class="auth-brand" aria-label="Kembali ke landing page">
+        <img src="/assets/logo-mandapos.svg" alt="Logo MandaPOS" class="auth-logo" />
+      </a>
+
+      <section class="auth-card">
+        <p class="eyebrow">Selamat datang kembali</p>
+        <h1>Login ke akun MandaPOS</h1>
+        <p class="auth-lead">
+          Lanjutkan operasional restoran Anda dengan lebih rapi. Pantau penjualan, tim, dan performa cabang dalam satu tempat.
+        </p>
+
+        <div id="formMessage" class="form-message" hidden></div>
+
+        <form class="auth-form" action="/auth/login" method="post">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="nama@restorananda.com" required />
+
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="Masukkan password" required />
+
+          <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+
+        <p class="auth-note">
+          Belum punya akun?
+          <a href="/register">Daftar sekarang</a>
+        </p>
+      </section>
+    </main>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const formMessage = document.getElementById('formMessage');
+      const error = params.get('error');
+      const success = params.get('success');
+
+      if (error) {
+        formMessage.hidden = false;
+        formMessage.classList.add('is-error');
+        formMessage.textContent = error;
+      } else if (success) {
+        formMessage.hidden = false;
+        formMessage.classList.add('is-success');
+        formMessage.textContent = success;
+      }
+    </script>
+  </body>
+</html>

@@ -1,4 +1,4 @@
-# mandapos
+# MandaPOS
 
 **Free and Open-Source POS System by Mandatech**
 
@@ -31,9 +31,9 @@ Aplikasi mendukung **mode offline** menggunakan SQLite pada perangkat lokal. Saa
 
 #### 1. Table & Floor Management
 - Denah meja interaktif per lantai/area (floor) dengan status real-time:
-  - **Kosong**
-  - **Terisi/Pesan**
-  - **Dibersihkan**
+	- **Kosong**
+	- **Terisi/Pesan**
+	- **Dibersihkan**
 - Pindah pesanan antar meja.
 - Gabung pesanan dari beberapa meja.
 - Split bill per meja (berdasarkan item atau per orang).
@@ -41,9 +41,9 @@ Aplikasi mendukung **mode offline** menggunakan SQLite pada perangkat lokal. Saa
 #### 2. Order Flow ke Dapur (KDS-lite)
 - Pesanan dari kasir/waiter langsung masuk ke layar dapur.
 - Status pesanan per item/per tiket:
-  - **Pending**
-  - **In Progress**
-  - **Ready**
+	- **Pending**
+	- **In Progress**
+	- **Ready**
 - Notifikasi status untuk waiter dan kasir agar alur saji lebih cepat.
 - Pelanggan dapat melihat status antrian order mereka berdasarkan nomor order (mis. menunggu diproses, sedang dimasak, siap diambil).
 - User dapur dapat melihat rincian item dan urutan antrean pesanan untuk diproses sesuai prioritas.
@@ -51,23 +51,23 @@ Aplikasi mendukung **mode offline** menggunakan SQLite pada perangkat lokal. Saa
 #### 3. Manajemen Menu, Varian, dan Modifier
 - Master menu utama dan kategori menu (makanan, minuman, dessert).
 - Dukungan varian menu:
-  - Ukuran (small/medium/large)
-  - Topping/add-on
-  - Level pedas
+	- Ukuran (small/medium/large)
+	- Topping/add-on
+	- Level pedas
 - Modifier tambahan (mis. extra es, no gula, no bawang).
 - Catatan khusus ke dapur per item/per order.
 
 #### 4. Payment & Tips Handling
 - Metode pembayaran lengkap:
-  - Tunai
-  - Kartu
-  - QRIS
-  - E-wallet
+	- Tunai
+	- Kartu
+	- QRIS
+	- E-wallet
 - Split payment dalam satu transaksi (contoh: cash + QRIS, cash + kartu).
 - Manajemen tip:
-  - Input tip manual
-  - Tip per transaksi
-  - Rekap tip untuk laporan staf.
+	- Input tip manual
+	- Tip per transaksi
+	- Rekap tip untuk laporan staf.
 
 #### 5. Inventory Bahan Baku & Recipe
 - Manajemen bahan baku terpisah dari menu jual.
@@ -95,9 +95,9 @@ Aplikasi mendukung **mode offline** menggunakan SQLite pada perangkat lokal. Saa
 - Employee list, access rights, timecards, total hours.
 - Track clock in/out pegawai.
 - Level akses:
-  - Backoffice & POS: Owner, Administrator, Manager.
-  - POS only: Kasir.
-  - KDS only: Dapur (melihat rincian pesanan, urutan antrean, dan update status masak).
+	- Backoffice & POS: Owner, Administrator, Manager.
+	- POS only: Kasir.
+	- KDS only: Dapur (melihat rincian pesanan, urutan antrean, dan update status masak).
 
 #### Pelanggan & Nota
 - Manajemen customer.
@@ -105,6 +105,8 @@ Aplikasi mendukung **mode offline** menggunakan SQLite pada perangkat lokal. Saa
 
 #### Multi-Store
 - Multi-store support.
+- Satu user dapat mengelola banyak restoran/cabang.
+- Setiap restoran dapat memiliki banyak user dengan peran berbeda (owner, manager, kasir, staf).
 - Isolasi data per store untuk transaksi, stok, dan laporan.
 
 ### Ringkasan Dampak ke Arsitektur
@@ -156,17 +158,99 @@ Buka browser dan akses `http://localhost:8000`.
 
 ---
 
+## 🌐 Landing Page + Auth Express (Railway-Ready)
+
+Untuk kebutuhan landing page cepat yang langsung bisa dideploy di Railway, project ini juga menyediakan server Node.js (Express) dengan auth berbasis PostgreSQL.
+
+### Jalankan Lokal Landing Page
+
+```bash
+cp .env.example .env
+npm install
+npm start
+```
+
+Buka `http://localhost:3000`.
+
+### Deploy Landing Page ke Railway
+
+1. Push repository ke GitHub.
+2. Di Railway, pilih **New Project** -> **Deploy from GitHub Repo**.
+3. Pilih repository `mandapos`.
+4. Pastikan variable `DATABASE_URL` dan `SESSION_SECRET` terisi di Railway.
+5. Railway akan mendeteksi `package.json` lalu menjalankan `npm install` dan `npm start`.
+6. Landing page online di domain Railway.
+
+Struktur file landing page:
+- `server.js` -> server Express untuk melayani halaman statis.
+- `public/index.html` -> konten landing page.
+- `public/login.html` -> halaman login.
+- `public/register.html` -> halaman daftar.
+- `public/styles.css` -> styling dan animasi.
+- `public/assets/logo-mandapos.svg` -> logo MandaPOS.
+
+Alur auth demo yang aktif:
+- `POST /auth/register` -> membuat akun baru.
+- `POST /auth/login` -> login akun.
+- `GET /dashboard` -> halaman setelah login (butuh sesi aktif).
+- `POST /logout` -> keluar dari sesi.
+
+Penyimpanan akun auth Express:
+- Data user/restoran disimpan di PostgreSQL (`users`, `restaurants`, `restaurant_users`).
+- Tabel akan dibuat otomatis saat server dijalankan.
+
+---
+
+## 🧩 Laravel Auth (Migrasi Penuh)
+
+Folder Laravel hasil migrasi ada di `laravel/` dengan Breeze auth + skema multi-restoran.
+
+### Fitur yang sudah disiapkan di Laravel
+
+- Register/Login/Logout via Breeze.
+- Saat register, user otomatis dibuatkan restoran pertama.
+- Relasi many-to-many user-restoran dengan role di pivot (`restoran_user`).
+- Dashboard menampilkan restoran yang dikelola user.
+
+### Jalankan Laravel Auth
+
+```bash
+cd laravel
+cp .env.example .env
+composer install
+npm install
+php artisan key:generate
+php artisan migrate
+npm run build
+php artisan serve
+```
+
+### Konfigurasi PostgreSQL untuk Laravel
+
+Ubah `.env` di folder `laravel/`:
+
+```env
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=mandapos
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+```
+
+---
+
 ## ☁️ Deployment ke Railway
 
 1. Buat akun di [Railway](https://railway.app) dan buat proyek baru.
 2. Hubungkan repository GitHub ini ke proyek Railway.
 3. Tambahkan layanan **PostgreSQL** dari Railway marketplace.
 4. Set environment variable berikut di Railway:
-   - `APP_KEY` — hasil `php artisan key:generate --show`
-   - `DB_CONNECTION=pgsql`
-   - `DATABASE_URL` — otomatis diisi Railway dari layanan PostgreSQL
-   - `APP_ENV=production`
-   - `APP_URL` — URL domain yang diberikan Railway
+	 - `APP_KEY` — hasil `php artisan key:generate --show`
+	 - `DB_CONNECTION=pgsql`
+	 - `DATABASE_URL` — otomatis diisi Railway dari layanan PostgreSQL
+	 - `APP_ENV=production`
+	 - `APP_URL` — URL domain yang diberikan Railway
 5. Railway akan otomatis menjalankan build dan deploy.
 
 ---
@@ -185,7 +269,7 @@ Kontribusi sangat disambut! Silakan ikuti langkah berikut:
 
 Gunakan format [Conventional Commits](https://www.conventionalcommits.org/):
 
-```
+```bash
 feat: tambah fitur baru
 fix: perbaiki bug pada modul X
 docs: update dokumentasi
