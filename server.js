@@ -86,13 +86,23 @@ function escapeHtml(value) {
 
 app.use(express.static(publicDir, { index: false }));
 
-app.get('/health', (_req, res) => {
-  res.status(200).json({ status: 'ok' });
-});
+function getLaravelAppUrl() {
+  const laravelAppUrl = process.env.LARAVEL_APP_URL;
+  if (!laravelAppUrl) {
+    return null;
+  }
+
+  const trimmedUrl = laravelAppUrl.trim();
+  return trimmedUrl.length > 0 ? trimmedUrl : null;
+}
 
 app.get('/', (_req, res) => {
-  const laravelAppUrl = process.env.LARAVEL_APP_URL || 'http://localhost:8000';
-  return res.redirect(laravelAppUrl);
+  const laravelAppUrl = getLaravelAppUrl();
+  if (laravelAppUrl) {
+    return res.redirect(laravelAppUrl);
+  }
+
+  return res.sendFile(path.join(publicDir, 'index.html'));
 });
 
 app.get('/login', (req, res) => {
@@ -277,8 +287,12 @@ app.post('/logout', (req, res) => {
 });
 
 app.get('*', (_req, res) => {
-  const laravelAppUrl = process.env.LARAVEL_APP_URL || 'http://localhost:8000';
-  return res.redirect(laravelAppUrl);
+  const laravelAppUrl = getLaravelAppUrl();
+  if (laravelAppUrl) {
+    return res.redirect(laravelAppUrl);
+  }
+
+  return res.redirect('/');
 });
 
 initDb()
