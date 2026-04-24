@@ -8,7 +8,7 @@ mandapos adalah sistem Point-of-Sale (POS) gratis dan open-source yang dirancang
 
 ## 🎯 Target
 
-UMKM di Indonesia. UI/UX harus sangat mudah dan mempunyai _learning curve_ yang sangat pendek sehingga siapa pun dapat langsung menggunakannya.
+Restoran UMKM di Indonesia. UI/UX harus sangat mudah dan mempunyai _learning curve_ yang sangat pendek sehingga siapa pun dapat langsung menggunakannya.
 
 ---
 
@@ -27,38 +27,90 @@ Aplikasi mendukung **mode offline** menggunakan SQLite pada perangkat lokal. Saa
 
 ## ✨ Fitur
 
-### Operasional Kasir
-- Track **cash in** dan **cash out** dari drawer
-- Simpan dan edit order tanpa pembayaran
-- Kategorikan order sebagai **dine in**, **takeaway**, dan **delivery**
-- Kirim order ke **layar dapur** sesuai urutan pesanan
-- Tampilkan informasi order ke **layar customer**
+### Fitur Kunci Wajib POS Restoran
 
-### Manajemen Stok & Produk
-- **Items** dan **Categories**
-- **Inventory Management**
-- Notifikasi email untuk **low stock**
-- **Negative stock alert**
-- Generate dan scan **barcode** dengan _embedded weight_
-- **Discounts**
+#### 1. Table & Floor Management
+- Denah meja interaktif per lantai/area (floor) dengan status real-time:
+  - **Kosong**
+  - **Terisi/Pesan**
+  - **Dibersihkan**
+- Pindah pesanan antar meja.
+- Gabung pesanan dari beberapa meja.
+- Split bill per meja (berdasarkan item atau per orang).
 
-### Manajemen Pegawai & Akses
-- **Employee list**, access rights, timecards, total hours
-- Track **clock in/out** pegawai
+#### 2. Order Flow ke Dapur (KDS-lite)
+- Pesanan dari kasir/waiter langsung masuk ke layar dapur.
+- Status pesanan per item/per tiket:
+  - **Pending**
+  - **In Progress**
+  - **Ready**
+- Notifikasi status untuk waiter dan kasir agar alur saji lebih cepat.
+- Pelanggan dapat melihat status antrian order mereka berdasarkan nomor order (mis. menunggu diproses, sedang dimasak, siap diambil).
+- User dapur dapat melihat rincian item dan urutan antrean pesanan untuk diproses sesuai prioritas.
+
+#### 3. Manajemen Menu, Varian, dan Modifier
+- Master menu utama dan kategori menu (makanan, minuman, dessert).
+- Dukungan varian menu:
+  - Ukuran (small/medium/large)
+  - Topping/add-on
+  - Level pedas
+- Modifier tambahan (mis. extra es, no gula, no bawang).
+- Catatan khusus ke dapur per item/per order.
+
+#### 4. Payment & Tips Handling
+- Metode pembayaran lengkap:
+  - Tunai
+  - Kartu
+  - QRIS
+  - E-wallet
+- Split payment dalam satu transaksi (contoh: cash + QRIS, cash + kartu).
+- Manajemen tip:
+  - Input tip manual
+  - Tip per transaksi
+  - Rekap tip untuk laporan staf.
+
+#### 5. Inventory Bahan Baku & Recipe
+- Manajemen bahan baku terpisah dari menu jual.
+- Resep/BOM per menu untuk konsumsi stok otomatis saat order dibayar.
+- Notifikasi stok hampir habis (low stock alert).
+- Alert stok negatif jika ada anomali.
+- Draft purchase order untuk restock bahan.
+
+#### 6. Reporting Khusus Restoran
+- Laporan menu terlaris.
+- Laporan jam ramai (peak hour) berdasarkan jumlah transaksi dan omzet.
+- Rata-rata bill per meja.
+- Laporan penjualan per kategori menu (makanan, minuman, dessert).
+- Laporan kinerja staf (kasir/waiter) berdasarkan transaksi yang ditangani.
+
+### Modul POS Pendukung
+
+#### Operasional Kasir
+- Track **cash in** dan **cash out** dari drawer.
+- Simpan dan edit order tanpa pembayaran.
+- Kategorikan order sebagai **dine in**, **takeaway**, dan **delivery**.
+- Tampilkan informasi order ke layar customer, termasuk status antrian per nomor pesanan.
+
+#### Manajemen Pegawai & Akses
+- Employee list, access rights, timecards, total hours.
+- Track clock in/out pegawai.
 - Level akses:
-  - **Backoffice & POS**: Owner, Administrator, Manager
-  - **POS only**: Kasir
+  - Backoffice & POS: Owner, Administrator, Manager.
+  - POS only: Kasir.
+  - KDS only: Dapur (melihat rincian pesanan, urutan antrean, dan update status masak).
 
-### Pelanggan & Nota
-- Manajemen **Customers**
-- Setting layout dan informasi **nota pembelian**
+#### Pelanggan & Nota
+- Manajemen customer.
+- Setting layout dan informasi nota pembelian.
 
-### Multi-Store & Laporan
-- **Multi-store** support
-- Laporan lengkap:
-  - Sales Summary
-  - Sales by Item, Category, Employee, Payment Type
-  - Receipts, Modifiers, Discounts, Taxes, Shifts
+#### Multi-Store
+- Multi-store support.
+- Isolasi data per store untuk transaksi, stok, dan laporan.
+
+### Ringkasan Dampak ke Arsitektur
+- Transaksi restoran berpusat pada entitas: floor, meja, order, order_item, modifier, payment_split, tip, recipe, dan stok bahan.
+- Alur order harus event-driven agar status KDS, waiter, dan kasir sinkron real-time.
+- Semua query operasional wajib tetap cepat di mode offline (SQLite) dan konsisten saat sinkron ke PostgreSQL.
 
 ---
 
