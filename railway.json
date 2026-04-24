@@ -1,8 +1,8 @@
 {
   "builder": "railpacks",
   "build": {
-    "installCommand": "cd laravel && composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader && npm ci --include=dev",
-    "buildCommand": "cd laravel && npm run build"
+    "installCommand": "echo 'Using deterministic buildCommand for Laravel app'",
+    "buildCommand": "cd laravel && composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader && npm ci --include=dev && npm run build"
   },
   "deploy": {
     "preDeployCommand": "cd laravel && php artisan migrate --force",
