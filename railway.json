@@ -1,7 +1,6 @@
 {
   "builder": "nixpacks",
   "deploy": {
-    "preDeployCommand": "cd laravel && php artisan migrate --force",
     "healthcheckPath": "/",
     "restartPolicy": {
       "type": "on-failure",
