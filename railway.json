@@ -1,12 +1,6 @@
 {
-  "builder": "railpacks",
-  "build": {
-    "installCommand": "echo 'Using deterministic buildCommand for Laravel app'",
-    "buildCommand": "cd laravel && composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader && npm ci --include=dev && npm run build"
-  },
+  "builder": "nixpacks",
   "deploy": {
-    "preDeployCommand": "cd laravel && php artisan migrate --force",
-    "startCommand": "cd laravel && php artisan serve --host=0.0.0.0 --port=$PORT",
     "healthcheckPath": "/",
     "restartPolicy": {
       "type": "on-failure",
