@@ -118,3 +118,43 @@ php artisan migrate:fresh --seed        # reset dan isi data dummy
 npm run dev     # development (watch mode)
 npm run build   # production build
 ```
+
+---
+
+## Wajib Dilakukan di Akhir Setiap Pekerjaan Agent
+
+Setiap kali agent selesai mengerjakan suatu tugas, **wajib** melakukan langkah-langkah berikut sebelum menyatakan pekerjaan selesai:
+
+### 1. Lint & Syntax Check
+
+```bash
+# Cek syntax PHP pada file yang diubah
+php -l app/Http/Controllers/NamaController.php
+
+# Cek seluruh proyek (jika tersedia PHP CS Fixer atau Pint)
+./vendor/bin/pint --test          # cek saja, tanpa auto-fix
+./vendor/bin/pint                  # auto-fix jika ada pelanggaran style
+```
+
+### 2. Jalankan Test Terkait
+
+```bash
+# Jalankan test yang relevan dengan perubahan
+php artisan test --filter=NamaTest
+
+# Atau jalankan semua test untuk memastikan tidak ada regresi
+php artisan test
+```
+
+### 3. Koreksi Otomatis Jika Ada Masalah
+
+- Jika **Pint** menemukan pelanggaran style → jalankan `./vendor/bin/pint` untuk auto-fix, lalu verifikasi ulang.
+- Jika **test gagal** → analisis error, perbaiki kode, dan jalankan ulang test sampai semua hijau.
+- Jika **syntax error** → perbaiki sebelum menyerahkan hasil pekerjaan.
+
+### 4. Verifikasi File yang Diubah
+
+- Baca ulang setiap file yang diedit untuk memastikan tidak ada sisa kode lama, tag yang tidak tertutup, atau blok `@if`/`@endif` yang tidak seimbang pada Blade.
+- Pastikan tidak ada konten duplikat atau sisa template dari proses replace.
+
+> **Aturan keras**: Agent tidak boleh menyatakan pekerjaan selesai jika masih ada error syntax, test merah, atau pelanggaran lint yang belum diperbaiki.
