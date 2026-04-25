@@ -14,7 +14,7 @@ return new class extends Migration
         if (!Schema::hasTable('dukungan_harians')) {
             Schema::create('dukungan_harians', function (Blueprint $table) {
                 $table->id();
-                $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+                $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
                 $table->date('tanggal');
                 $table->unsignedBigInteger('nominal')->default(0);
                 $table->timestamps();

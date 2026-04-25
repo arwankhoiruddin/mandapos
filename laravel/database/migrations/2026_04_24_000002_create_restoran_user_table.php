@@ -15,7 +15,7 @@ return new class extends Migration
             Schema::create('restoran_user', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('restoran_id')->constrained('restorans')->cascadeOnDelete();
-                $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+                $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
                 $table->string('role')->default('owner');
                 $table->timestamps();
 
