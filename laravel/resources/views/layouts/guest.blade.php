@@ -13,10 +13,14 @@
 
         <!-- Scripts -->
         @php
-            $viteAssetsReady = file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot'));
+            $hasViteManifest = file_exists(public_path('build/manifest.json'));
+            $hasViteHotFile = file_exists(public_path('hot'));
         @endphp
 
-        @if ($viteAssetsReady)
+        @if ($hasViteManifest)
+            @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @elseif ($hasViteHotFile)
+            <script src="https://cdn.tailwindcss.com"></script>
             @vite(['resources/css/app.css', 'resources/js/app.js'])
         @else
             <script src="https://cdn.tailwindcss.com"></script>
