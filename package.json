@@ -2,11 +2,11 @@
   "name": "mandapos-landing",
   "version": "1.0.0",
   "private": true,
-  "description": "Landing page MandaPOS yang siap dijalankan di Railway",
+  "description": "Bootstrap scripts for running Laravel app in /laravel",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "start": "cd laravel && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}",
+    "dev": "cd laravel && php artisan serve"
   },
   "engines": {
     "node": ">=18"

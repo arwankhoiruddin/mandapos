@@ -1,7 +1,7 @@
 {
   "builder": "nixpacks",
   "deploy": {
-    "healthcheckPath": "/health",
+    "healthcheckPath": "/up",
     "restartPolicy": {
       "type": "on-failure",
       "maxRetries": 10
