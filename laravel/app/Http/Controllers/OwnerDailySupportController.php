@@ -15,7 +15,7 @@ class OwnerDailySupportController extends Controller
         abort_unless($user && $user->isOwner(), 403);
 
         $data = $request->validate([
-            'nominal' => ['required', 'integer', 'min:0', 'max:1000000000'],
+            'nominal' => ['required', 'integer', 'min:1', 'max:1000000000'],
         ]);
 
         DukunganHarian::updateOrCreate(

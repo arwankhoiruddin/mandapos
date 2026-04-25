@@ -39,6 +39,22 @@ class OwnerDailySupportTest extends TestCase
         $response->assertDontSee('Kamu tetap bisa menggunakan POS ini tanpa biaya.');
     }
 
+    public function test_owner_cannot_submit_zero_nominal_and_form_still_shows(): void
+    {
+        $user = User::factory()->create();
+        $restoran = Restoran::create(['nama' => 'Warung Berkah']);
+        $user->restorans()->attach($restoran->id, ['role' => 'owner']);
+
+        $this->actingAs($user)
+            ->post('/dukungan-harian', ['nominal' => 0])
+            ->assertSessionHasErrors('nominal');
+
+        $response = $this->actingAs($user)->get('/dashboard');
+
+        $response->assertStatus(200);
+        $response->assertSee('Kamu tetap bisa menggunakan POS ini tanpa biaya.');
+    }
+
     public function test_non_owner_cannot_submit_daily_support(): void
     {
         $user = User::factory()->create();

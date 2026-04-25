@@ -31,7 +31,7 @@
                                         type="number"
                                         name="nominal"
                                         :value="old('nominal', 20000)"
-                                        min="0"
+                                        min="1"
                                         step="1"
                                         required
                                     />

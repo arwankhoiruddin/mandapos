@@ -14,6 +14,7 @@ class DashboardController extends Controller
         $showDailySupportForm = $user->isOwner()
             && ! DukunganHarian::where('user_id', $user->id)
                 ->whereDate('tanggal', today())
+                ->where('nominal', '>', 0)
                 ->exists();
 
         return view('dashboard', [

@@ -34,4 +34,19 @@ class RegistrationTest extends TestCase
         $this->assertTrue($user->isOwner());
         $this->assertCount(1, $user->restorans);
     }
+
+    public function test_new_owner_sees_daily_support_form_after_registering(): void
+    {
+        $response = $this->followingRedirects()->post('/register', [
+            'name' => 'Test User',
+            'email' => 'ownerbaru@example.com',
+            'nama_restoran' => 'Warung Baru',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ]);
+
+        $this->assertAuthenticated();
+        $response->assertStatus(200);
+        $response->assertSee('Kamu tetap bisa menggunakan POS ini tanpa biaya.');
+    }
 }
