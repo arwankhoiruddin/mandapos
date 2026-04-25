@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('dukungan_harians', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->date('tanggal');
-            $table->unsignedBigInteger('nominal')->default(0);
-            $table->timestamps();
+        if (!Schema::hasTable('dukungan_harians')) {
+            Schema::create('dukungan_harians', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+                $table->date('tanggal');
+                $table->unsignedBigInteger('nominal')->default(0);
+                $table->timestamps();
 
-            $table->unique(['user_id', 'tanggal']);
-        });
+                $table->unique(['user_id', 'tanggal']);
+            });
+        }
     }
 
     /**
